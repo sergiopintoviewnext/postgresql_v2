@@ -1,0 +1,10 @@
+#diccionario con informacion de usuarios
+
+info_usuarios:
+  - { nombre: name_user,
+      password: contraseña, 
+      priv: permisos, 
+      db: nombre_db, 
+      objs: objetos, 
+      type: tipo,
+      grant_option: super }

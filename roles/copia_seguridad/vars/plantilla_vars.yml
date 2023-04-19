@@ -1,6 +1,5 @@
 #bases de datos sobre las que hacer copia de seguridad
-db: [ base40 ]
+db: [ nombre ]
 
 #ruta donde ubicar los backups
 path: ruta_carpeta
-path: /tmp/

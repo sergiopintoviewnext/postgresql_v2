@@ -1,0 +1,18 @@
+#URL de repositorio postgressql
+url_repo_rhel8: https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+url_repo_debian: deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main
+
+#clave GPG repo Postgresql debian
+clave_gpg_debian: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+#version de postgresql que se instalará
+version_postgresql: 15
+
+#paquetes a instalar
+paquetes_rhel8:
+  - postgresql{{ version_postgresql }}-server
+  - python3-psycopg2
+
+paquetes_debian:
+  - postgresql-{{ version_postgresql }}
+  - python3-psycopg2

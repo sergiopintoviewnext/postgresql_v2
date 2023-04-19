@@ -1,0 +1,12 @@
+---
+
+- name: Crear db
+  community.postgresql.postgresql_db:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ db }}"
+  become: true
+  become_method: su
+  become_user: postgres
+
+...

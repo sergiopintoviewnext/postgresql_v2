@@ -1,0 +1,18 @@
+#diccionario con informacion de usuarios
+
+info_usuarios:
+  - { nombre: usuario1,
+      password: 123456, 
+      priv: ALL, 
+      db: db_3, 
+      objs: public, 
+      type: schema,
+      grant_option: false }
+
+  - { nombre: usuario2, 
+      password: qwerty, 
+      priv: "select,insert,update", 
+      db: db_2, 
+      objs: tables, 
+      type: default_privs,
+      grant_option: false }

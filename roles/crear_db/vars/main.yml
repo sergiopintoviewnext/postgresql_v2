@@ -1,0 +1,3 @@
+#nombre de las bases de datos que queremos crear
+
+db: [ "db_1", "db_2", "db_3" ]

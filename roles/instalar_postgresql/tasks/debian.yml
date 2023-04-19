@@ -1,0 +1,25 @@
+---
+
+- name: Instalar postgresql y psycopg2
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ paquetes_debian }}"
+
+
+- name: Inicializar postgresql
+  ansible.builtin.command:
+    cmd: postgresql-{{ version_postgresql }}-setup initdb
+  register: ini_postgres
+  failed_when: ini_postgres.changed == "false"
+  changed_when: false
+
+
+- name: Iniciar servicio postgresql
+  ansible.builtin.service:
+    state: started
+    name: postgresql
+    enabled: true
+
+...

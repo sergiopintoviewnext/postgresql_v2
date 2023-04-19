@@ -1,0 +1,29 @@
+---
+
+- name: Crear copia de suguridad
+  community.postgresql.postgresql_db:
+    name: "{{ item }}"
+    state: dump
+    target: "{{ path }}{{ item }}.sql"
+  with_items: "{{ db }}"
+  changed_when: false
+  become: true
+  become_method: su
+  become_user: postgres
+
+
+- name: Comprobar ficheros copia de seguridad
+  ansible.builtin.stat:
+    path: "{{ path }}{{ item }}.sql"
+  register: fichero_copia
+  with_items: "{{ db }}"
+
+
+- name: Existe fichero
+  ansible.builtin.assert:
+    that: item.stat.exists == True
+    success_msg: "El fichero {{ item.stat.path }} existe, se ha realizado la copia de seguridad"
+    fail_msg: "El fichero {{ item.stat.path }} NO existe, NO se ha realizado la copia de seguridad"
+  with_items: "{{ fichero_copia.results }}"
+
+...

@@ -1,0 +1,27 @@
+---
+
+- name: Crear usuarios
+  community.postgresql.postgresql_user:
+    name: "{{ item.nombre }}"
+    password: "{{ item.password }}"
+  with_items: "{{ info_usuarios }}"
+  become: true
+  become_method: su
+  become_user: postgres
+
+
+- name: Otorgar permisos y privilegios
+  community.postgresql.postgresql_privs:
+    db: "{{ item.db }}"
+    roles: "{{ item.nombre }}"
+    privs: "{{ item.priv }}"
+    objs: "{{ item.objs }}"
+    type: "{{ item.type }}"
+    grant_option: "{{ item.grant_option }}"
+    state: present
+  with_items: "{{ info_usuarios }}"     
+  become: true
+  become_method: su
+  become_user: postgres
+
+...

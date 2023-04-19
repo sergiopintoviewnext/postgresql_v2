@@ -1,0 +1,5 @@
+#bases de datos sobre las que hacer copia de seguridad
+db: [ "db_1", "db_2", "db_3" ]
+
+#ruta donde ubicar los backups
+path: /tmp/

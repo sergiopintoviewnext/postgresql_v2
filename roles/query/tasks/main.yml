@@ -1,0 +1,19 @@
+---
+
+- name: Consultas a las db
+  community.postgresql.postgresql_query:
+    db: "{{ item.db }}"
+    query: "{{ item.query }}"
+  with_items: "{{ query_info }}"
+  become: true
+  become_method: su
+  become_user: postgres
+  register: resultado_query
+
+
+- name: Ver resultado query
+  ansible.builtin.debug:
+    msg: "{{ item.query_result }}" 
+  with_items: "{{ resultado_query.results }}"
+
+...

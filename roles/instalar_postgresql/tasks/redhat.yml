@@ -17,7 +17,7 @@
 
 - name: Inicializar postgresql
   ansible.builtin.command:
-    cmd: postgresql-{{ version_postgresql }}-setup initdb
+    cmd: postgresql-setup initdb
   register: ini_postgres
   failed_when: ini_postgres.changed == "false"
   changed_when: false
@@ -26,7 +26,7 @@
 - name: Iniciar servicio postgresql
   ansible.builtin.service:
     state: started
-    name: postgresql-{{ version_postgresql }}
+    name: postgresql
     enabled: true
 
 ...

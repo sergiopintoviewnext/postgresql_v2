@@ -10,7 +10,7 @@ version_postgresql: 15
 
 #paquetes a instalar
 paquetes_rhel8:
-  - postgresql{{ version_postgresql }}-server
+  - postgresql-server
   - python3-psycopg2
 
 paquetes_debian:

@@ -5,7 +5,7 @@ url_repo_debian: deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main
 #clave GPG repo Postgresql debian
 clave_gpg_debian: https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
-#version de postgresql que se instalará
+#version de postgresql que se instalará 
 version_postgresql: 15
 
 #paquetes a instalar

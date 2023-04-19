@@ -1,5 +1,13 @@
 ---
 
+- name: Añadir repositorio postgresql Rhel8
+  ansible.builtin.yum:
+    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    state: present
+    disable_gpg_check: true
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "8"
+
+
 - name: Instalar postgresql y psycopg2
   ansible.builtin.yum:
     name: "{{ item }}"

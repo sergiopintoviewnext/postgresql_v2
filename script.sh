@@ -20,6 +20,21 @@ blanco='\033[1;37m'
 normal='\033[0;39m'
 
 
+server(){
+
+    echo -e $amarillo"____________________________________"
+    echo " "
+    echo -e $azul"Servidores:"
+    echo -e $purpura" "
+    cat inventory/hosts 
+
+
+    echo -en $amarillo"Elige servidor/es: "$normal
+    read server
+    echo -e $amarillo"____________________________________"
+
+}
+
 
 instalar_postgresql(){
 
@@ -37,21 +52,23 @@ instalar_postgresql(){
 
 crear_db(){
 
-    cat plantilla.yml | sed 's/rol$/crear_db/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/crear_db/g' | sed 's/all/'$server'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then
 
         echo -e $amarillo"____________________________________"
+        echo " "
         echo -e $azul"Variables para crear la db"
         echo " "
         echo -en $amarillo"Nombre de la base de datos: "$normal
         read nombre_db
 
-        cat roles/crear_db/vars/plantilla_vars.yml | sed 's/nombre/'$nombre_db'/g' > roles/crear_db/vars/main.yml
+        cat roles/crear_db/vars/plantilla_vars.yml | sed 's/nombre/'$nombre_db'/g' > roles/crear_db/vars/main.yml; 
         
         if [ $? -eq 0 ]
         then
+
             ansible-playbook playbook.yml -i inventory/hosts
         else
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/crear_db/vars/main.yml"
@@ -72,6 +89,7 @@ crear_usuarios(){
     then
 
         echo -e $amarillo"____________________________________"
+        echo " "
         echo -e $azul"Variables para crear usuarios"
         echo " "
         echo -en $amarillo"Nombre de usuario: "$normal
@@ -114,11 +132,12 @@ copia_seguridad(){
     then    
 
         echo -e $amarillo"____________________________________"
+        echo " "
         echo -e $azul"Variables para backup"
         echo " "
         echo -en $amarillo"Nombre de la db: "$normal
         read nombre
-        echo -en $amarillo"Ruta donde ubicar el backup: "$normal
+        echo -en $amarillo"Carpeta donde guardar el backup (ej. /home/user/backups/): "$normal
         read ruta_carpeta
 
 
@@ -150,7 +169,39 @@ restore_db(){
 
     cat plantilla.yml | sed 's/rol$/restore_db/g' > playbook.yml
 
-    ansible-playbook playbook.yml -i inventory/hosts
+    if [ $? -eq 0 ]
+    then    
+
+        echo -e $amarillo"____________________________________"
+        echo " "
+        echo -e $azul"Variables para restarurar la db"
+        echo " "
+        echo -en $amarillo"Nombre de la db: "$normal
+        read nombre
+        echo -en $amarillo"Carpeta donde esta el backup (ej. /home/user/backups/): "$normal
+        read ruta_carpeta
+
+
+        cat roles/restore_db/vars/plantilla_vars.yml | sed 's/nombre/'$nombre'/g' > roles/restore_db/vars/main.yml
+
+        if [ $? -eq 0 ]
+        then   
+            echo "path: $ruta_carpeta" >> roles/restore_db/vars/main.yml
+
+            if [ $? -eq 0 ]
+            then
+                ansible-playbook playbook.yml -i inventory/hosts
+            else
+                echo -e $rojo"Se ha producido un error al pasar la variables con la ruta de destino al fichero roles/restore_db/vars/main.yml"$normal
+            fi
+
+        else
+            echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/restore_db/vars/main.yml"$normal
+        fi
+
+    else
+        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
+    fi
 
 }
 
@@ -159,16 +210,49 @@ query(){
 
     cat plantilla.yml | sed 's/rol$/query/g' > playbook.yml
 
-    ansible-playbook playbook.yml -i inventory/hosts
+    if [ $? -eq 0 ]
+    then    
+
+        echo -e $amarillo"____________________________________"
+        echo " "
+        echo -e $azul"Variables para realizar la query"
+        echo " "
+        echo -en $amarillo"Nombre de la db: "$normal
+        read nombre
+        echo -en $amarillo"Query a realizar ($rojo NO $amarillo añadir ';' al final): "$normal
+        read accion
+
+
+        echo "$accion"
+
+        cat roles/query/vars/plantilla_vars.yml | sed 's/nombre/'$nombre'/g' | sed 's/accion/'$accion'/g' > roles/query/vars/main.yml
+
+        if [ $? -eq 0 ]
+        then   
+            ansible-playbook playbook.yml -i inventory/hosts
+        else
+            echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/query/vars/main.yml"$normal
+        fi
+
+    else
+        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
+    fi
 
 }
 
-
+server=all
 
 while true :
 do
+
+    echo -e $verde"==========================================="
+    echo -e "Servidor: $server"
+    echo -e "==========================================="$normal
+    echo " "
+
     echo -e $azul"Elige el rol a ejecutar:"
-    echo -e $cyan"================================"
+    echo -e $cyan"==========================================="
+    echo -e "0. Elegir servidor (all por defecto)"
     echo -e "1. Instalar Postgresql"
     echo -e "2. Crear db"
     echo -e "3. Crear usuario en la db"
@@ -176,11 +260,14 @@ do
     echo -e "5. Restaurar db"
     echo -e "6. Realizar una query"
     echo -e "7. Salir"
-    echo -e "================================="$normal
+    echo -e "==========================================="$normal
     echo -ne $verde"Dime opcion: "$normal
     read opcion
+    echo " "
 
     case $opcion in
+
+        0)  server;;
 
         1)  instalar_postgresql;;
 

@@ -1,6 +1,6 @@
 #URL de repositorio postgressql
-url_repo_rhel8: https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
-url_repo_debian: deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main
+url_repo_rhel8: https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_distribution_major_version }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+url_repo_debian: deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main
 
 #clave GPG repo Postgresql debian
 clave_gpg_debian: https://www.postgresql.org/media/keys/ACCC4CF8.asc

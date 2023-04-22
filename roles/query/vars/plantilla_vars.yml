@@ -1,4 +1,4 @@
 #db sobre la que realizar la query y la query SQL a realizar
 query_info:
   - { db: nombre,
-      query: accion; }
+      query: "accion" }

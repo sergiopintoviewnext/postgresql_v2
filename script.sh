@@ -68,12 +68,10 @@ crear_db(){
         
         if [ $? -eq 0 ]
         then
-
             ansible-playbook playbook.yml -i inventory/hosts
         else
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/crear_db/vars/main.yml"
-        fi
-    
+        fi    
     else
         echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
     fi
@@ -117,7 +115,6 @@ crear_usuarios(){
         else
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/crear_usuarios/vars/main.yml"$normal
         fi
-
     else
         echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
     fi
@@ -153,11 +150,9 @@ copia_seguridad(){
             else
                 echo -e $rojo"Se ha producido un error al pasar la variables con la ruta de destino al fichero roles/copia_seguridad/vars/main.yml"$normal
             fi
-
         else
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/copia_seguridad/vars/main.yml"$normal
         fi
-
     else
         echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
     fi
@@ -194,11 +189,9 @@ restore_db(){
             else
                 echo -e $rojo"Se ha producido un error al pasar la variables con la ruta de destino al fichero roles/restore_db/vars/main.yml"$normal
             fi
-
         else
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/restore_db/vars/main.yml"$normal
         fi
-
     else
         echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
     fi
@@ -219,21 +212,26 @@ query(){
         echo " "
         echo -en $amarillo"Nombre de la db: "$normal
         read nombre
-        echo -en $amarillo"Query a realizar ($rojo NO $amarillo añadir ';' al final): "$normal
+        echo -en $amarillo"Query a realizar ($rojo RECUERDA $amarillo añadir ';' al final de la query): "$normal
         read accion
+        
 
-
-        echo "$accion"
-
-        cat roles/query/vars/plantilla_vars.yml | sed 's/nombre/'$nombre'/g' | sed 's/accion/'$accion'/g' > roles/query/vars/main.yml
+        cat roles/query/vars/plantilla_vars.yml | sed 's/nombre/'$nombre'/g' | sed 's/accion/{{ accion }}/g' > roles/query/vars/main.yml
 
         if [ $? -eq 0 ]
-        then   
-            ansible-playbook playbook.yml -i inventory/hosts
-        else
-            echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/query/vars/main.yml"$normal
-        fi
+        then
 
+            echo "accion: $accion" >> roles/query/vars/main.yml
+
+            if [ $? -eq 0 ]
+            then   
+                ansible-playbook playbook.yml -i inventory/hosts
+            else
+                echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/query/vars/main.yml"$normal
+            fi        
+        else
+            echo -e $rojo"Se ha producido un error al introducir las variable 'accion' al fichero roles/query/vars/main.yml"$normal
+        fi
     else
         echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
     fi
@@ -281,15 +279,12 @@ do
 
         6)  query;;
 
-        7)  echo -e $purpura"Hasta pronto!!"$normal
-        
+        7)  echo -e $purpura"Hasta pronto!!"$normal        
             break;;
 
         *)  echo -e $rojo"Opcion incorrecta"$normal
             sleep 2;;
 
     esac
-
-
 
 done

@@ -30,7 +30,7 @@ server(){
 
 
     echo -en $amarillo"Elige servidor/es: "$normal
-    read server
+    read servidor
     echo -e $amarillo"____________________________________"
 
 }
@@ -38,7 +38,7 @@ server(){
 
 instalar_postgresql(){
 
-    cat plantilla.yml | sed 's/rol$/instalar_postgresql/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/instalar_postgresql/g' | sed 's/all/'$servidor'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then
@@ -52,7 +52,7 @@ instalar_postgresql(){
 
 crear_db(){
 
-    cat plantilla.yml | sed 's/rol$/crear_db/g' | sed 's/all/'$server'/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/crear_db/g' | sed 's/all/'$servidor'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then
@@ -64,16 +64,16 @@ crear_db(){
         echo -en $amarillo"Nombre de la base de datos: "$normal
         read nombre_db
 
-        cat roles/crear_db/vars/plantilla_vars.yml | sed 's/nombre/'$nombre_db'/g' > roles/crear_db/vars/main.yml; 
+        cat roles/crear_db/vars/plantilla_vars.yml | sed 's/nombre/'$nombre_db'/g' > roles/crear_db/vars/main.yml 
         
         if [ $? -eq 0 ]
         then
             ansible-playbook playbook.yml -i inventory/hosts
         else
-            echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/crear_db/vars/main.yml"
+            echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/crear_db/vars/main.yml"$normal
         fi    
     else
-        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
+        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"$normal
     fi
 
 }
@@ -81,7 +81,7 @@ crear_db(){
 
 crear_usuarios(){
 
-    cat plantilla.yml | sed 's/rol$/crear_usuarios/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/crear_usuarios/g' | sed 's/all/'$servidor'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then
@@ -93,7 +93,7 @@ crear_usuarios(){
         echo -en $amarillo"Nombre de usuario: "$normal
         read name_user
         echo -en $amarillo"Contraseña: "$normal
-        read pass
+        read passw
         echo -en $amarillo"Permisos: "$normal
         read permisos
         echo -en $amarillo"Nombre base de datos: "$normal
@@ -105,7 +105,7 @@ crear_usuarios(){
         echo -en $amarillo"Grant option [true|false]: "$normal
         read super
 
-        cat roles/crear_usuarios/vars/plantilla_vars.yml | sed 's/name_user/'$name_user'/g' | sed 's/contraseña/'$pass'/g' \
+        cat roles/crear_usuarios/vars/plantilla_vars.yml | sed 's/name_user/'$name_user'/g' | sed 's/contraseña/'$passw'/g' \
         | sed 's/permisos/'$permisos'/g' | sed 's/nombre_db/'$nombre_db'/g' | sed 's/objetos/'$objetos'/g' \
         | sed 's/tipo/'$tipo'/g' | sed 's/super/'$super'/g' > roles/crear_usuarios/vars/main.yml
 
@@ -116,14 +116,14 @@ crear_usuarios(){
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/crear_usuarios/vars/main.yml"$normal
         fi
     else
-        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
+        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"$normal
     fi
 
 }
 
 copia_seguridad(){
 
-    cat plantilla.yml | sed 's/rol$/copia_seguridad/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/copia_seguridad/g' | sed 's/all/'$servidor'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then    
@@ -154,7 +154,7 @@ copia_seguridad(){
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/copia_seguridad/vars/main.yml"$normal
         fi
     else
-        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
+        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"$normal
     fi
 
 }
@@ -162,7 +162,7 @@ copia_seguridad(){
 
 restore_db(){
 
-    cat plantilla.yml | sed 's/rol$/restore_db/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/restore_db/g' | sed 's/all/'$servidor'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then    
@@ -193,7 +193,7 @@ restore_db(){
             echo -e $rojo"Se ha producido un error al pasar las variables al fichero roles/restore_db/vars/main.yml"$normal
         fi
     else
-        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"
+        echo -e $rojo"Se ha producido un error al introducir el rol en playbook.yml"$normal
     fi
 
 }
@@ -201,7 +201,7 @@ restore_db(){
 
 query(){
 
-    cat plantilla.yml | sed 's/rol$/query/g' > playbook.yml
+    cat plantilla.yml | sed 's/rol$/query/g' | sed 's/all/'$servidor'/g' > playbook.yml
 
     if [ $? -eq 0 ]
     then    
@@ -238,13 +238,13 @@ query(){
 
 }
 
-server=all
+servidor=all
 
 while true :
 do
 
     echo -e $verde"==========================================="
-    echo -e "Servidor: $server"
+    echo -e "Servidor: $servidor"
     echo -e "==========================================="$normal
     echo " "
 

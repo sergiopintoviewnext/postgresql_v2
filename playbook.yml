@@ -3,6 +3,6 @@
 - hosts: all
   remote_user: root
   roles:
-    - role: query
+    - role: restore_db
     
 ...

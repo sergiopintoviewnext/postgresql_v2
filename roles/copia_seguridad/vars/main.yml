@@ -1,5 +1,5 @@
 #bases de datos sobre las que hacer copia de seguridad
-db: [ db1 ]
+db: [ base30 ]
 
 #ruta donde ubicar los backups
 

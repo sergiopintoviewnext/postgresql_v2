@@ -157,8 +157,36 @@ def restore_db():
 
 
 def query():
-    
-    
+
+    os.system(f"cat plantilla.yml | sed 's/rol$/query/g' | sed 's/all/{servidor}/g' > playbook.yml")
+
+    if os.system("echo $? >/dev/null") == 0:
+        print(f"{amarillo}____________________________________")
+        print(" ")
+        print(f"{azul}Variables para realizar la query")
+        print(" ")
+        nombre=input(f"{amarillo}Nombre de la db: {normal}")
+        accion=input(f"{amarillo}Query a realizar ({rojo} RECUERDA {amarillo} añadir ';' al final de la query): {normal}")
+        accion_ansible= "\{\{ accion }}"                            
+        
+        os.system(f"cat roles/query/vars/plantilla_vars.yml | sed 's/nombre/{nombre}/g' | sed 's/accion/{accion_ansible}/g' > roles/query/vars/main.yml")
+
+        if os.system("echo $? >/dev/null") == 0:            
+            f = open('roles/query/vars/main.yml','a')
+            f.write("accion: {}".format(accion))
+            f.close()
+            
+            if os.system("echo $? >/dev/null") == 0:
+                os.system("ansible-playbook playbook.yml -i inventory/hosts")
+            else:
+                print(f"{rojo}Se ha producido un error al pasar las variables al fichero roles/query/vars/main.yml{normal}")
+        else:
+            print(f"{rojo}Se ha producido un error al introducir las variable 'accion' al fichero roles/query/vars/main.yml{normal}")
+    else:
+        print(f"{rojo}Se ha producido un error al introducir el rol en playbook.yml{normal}")
+            
+            
+                
     
 servidor = "all"
 
@@ -198,8 +226,7 @@ while True:
     elif opcion == '5':
         restore_db()
     elif opcion == '6':
-        #query
-        pass
+        query()        
     elif opcion == '7':
         print(f"{purpura}¡¡Hasta pronto!!{normal}")
         print(" ")

@@ -88,9 +88,9 @@ def crear_usuarios():
         tipo=input(f"{amarillo}Tipo: {normal}")
         super=input(f"{amarillo}Gran option [true|false]: {normal}")
                 
-        os.system("cat roles/crear_usuarios/vars/plantilla_vars.yml | sed 's/name_user/'$name_user'/g' | sed 's/contraseña/'$passw'/g' \
-        | sed 's/permisos/'$permisos'/g' | sed 's/nombre_db/'$nombre_db'/g' | sed 's/objetos/'$objetos'/g' \
-        | sed 's/tipo/'$tipo'/g' | sed 's/super/'$super'/g' > roles/crear_usuarios/vars/main.yml")
+        os.system(f"cat roles/crear_usuarios/vars/plantilla_vars.yml | sed 's/name_user/{name_user}/g' | sed 's/contraseña/{passw}/g' \
+        | sed 's/permisos/{permisos}/g' | sed 's/nombre_db/{nombre_db}/g' | sed 's/objetos/{objetos}/g' \
+        | sed 's/tipo/{tipo}/g' | sed 's/super/{super}/g' > roles/crear_usuarios/vars/main.yml")
         
         if os.system("echo $? >/dev/null") == 0:
             os.system("ansible-playbook playbook.yml -i inventory/hosts")

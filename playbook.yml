@@ -1,6 +1,6 @@
 ---
 
-- hosts: all
+- hosts: CENTOS8
   remote_user: root
   roles:
     - role: query

@@ -1,6 +1,6 @@
 ---
 
-- name: Incluir instalacion RHEL8
+- name: Incluir instalacion centos8
   ansible.builtin.include_tasks: redhat.yml
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "8"
 

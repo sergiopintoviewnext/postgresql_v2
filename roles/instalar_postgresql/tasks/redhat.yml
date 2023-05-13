@@ -1,6 +1,6 @@
 ---
 
-- name: Añadir repositorio postgresql Rhel8
+- name: Añadir repositorio postgresql Centos8
   ansible.builtin.yum:
     name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
     state: present
@@ -12,7 +12,7 @@
     name: "{{ item }}"
     state: present
     update_cache: true
-  with_items: "{{ paquetes_rhel8 }}"
+  with_items: "{{ paquetes_centos8 }}"
 
 
 - name: Inicializar postgresql

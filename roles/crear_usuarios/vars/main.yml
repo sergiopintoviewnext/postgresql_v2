@@ -1,10 +1,10 @@
 #diccionario con informacion de usuarios
 
 info_usuarios:
-  - { nombre: ,
-      password: , 
-      priv: , 
-      db: , 
-      objs: , 
-      type: ,
-      grant_option:  }
+  - { nombre: pepe,
+      password: 123456, 
+      priv: ALL, 
+      db: db1, 
+      objs: public, 
+      type: schema,
+      grant_option: true }

@@ -1,5 +1,5 @@
 #db sobre la que realizar la query y la query SQL a realizar
 query_info:
-  - { db: base40,
+  - { db: db1,
       query: "{{ accion }}" }
-accion: select * from user;
+accion: SELECT version();
